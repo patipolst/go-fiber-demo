@@ -4,10 +4,14 @@ import "github.com/gofiber/fiber"
 
 func main() {
 	app := fiber.New()
-
-	app.Get("/", func(c *fiber.Ctx) {
-		c.Send("Hello, World!")
-	})
-
+	setupRoutes(app)
 	app.Listen(3000)
+}
+
+func helloHandler(c *fiber.Ctx) {
+	c.Send("Hello, World!")
+}
+
+func setupRoutes(app *fiber.App) {
+	app.Get("/", helloHandler)
 }
