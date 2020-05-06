@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gofiber/fiber"
+	"github.com/patipolst/go-fiber-demo/controller"
+	"github.com/patipolst/go-fiber-demo/route"
 	"github.com/patipolst/go-fiber-demo/service"
 )
 
@@ -18,8 +20,9 @@ func helloHandler(c *fiber.Ctx) {
 func setupRoutes(app *fiber.App) {
 	app.Get("/", helloHandler)
 
-	app.Get("/users", service.GetUsers)
-	app.Get("/users/:id", service.GetUser)
-	app.Post("/users", service.CreateUser)
-	app.Delete("/users/:id", service.DeleteUser)
+	userStore := service.NewDummyUserStore()
+	userService := service.NewUserService(userStore)
+	userController := controller.NewUserController(userService)
+	userRoute := route.NewUserRoute(userController)
+	userRoute.SetupUserRoutes(app)
 }
