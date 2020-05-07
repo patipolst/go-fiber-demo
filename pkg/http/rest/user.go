@@ -9,36 +9,36 @@ import (
 )
 
 type UserHandler struct {
-	service user.Service
+	s user.Service
 }
 
-func NewUserHandler(service user.Service) UserHandler {
-	return UserHandler{service}
+func NewUserHandler(s user.Service) UserHandler {
+	return UserHandler{s}
 }
 
-func (handler *UserHandler) getAllUsers(c *fiber.Ctx) {
-	users := handler.service.GetAllUsers()
+func (h *UserHandler) getAllUsers(c *fiber.Ctx) {
+	users := h.s.GetAllUsers()
 	c.JSON(users)
 }
 
-func (handler *UserHandler) getUser(c *fiber.Ctx) {
+func (h *UserHandler) getUser(c *fiber.Ctx) {
 	id := extractID(c)
-	user := handler.service.GetUser(id)
+	user := h.s.GetUser(id)
 	c.JSON(user)
 }
 
-func (handler *UserHandler) createUser(c *fiber.Ctx) {
+func (h *UserHandler) createUser(c *fiber.Ctx) {
 	user := new(user.User)
 	if err := c.BodyParser(user); err != nil {
 		log.Fatal(err)
 	}
-	handler.service.CreateUser(*user)
+	h.s.CreateUser(*user)
 	c.JSON(user)
 }
 
-func (handler *UserHandler) deleteUser(c *fiber.Ctx) {
+func (h *UserHandler) deleteUser(c *fiber.Ctx) {
 	id := extractID(c)
-	handler.service.DeleteUser(id)
+	h.s.DeleteUser(id)
 	c.JSON(fiber.Map{
 		"ok": true,
 	})
