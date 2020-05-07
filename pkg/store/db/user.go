@@ -1,4 +1,4 @@
-package stub
+package db
 
 import (
 	"github.com/jinzhu/gorm"
@@ -9,7 +9,10 @@ type Store struct {
 	db *gorm.DB
 }
 
-func NewStore() (*Storage, error) {
+func NewStore() (*Store, error) {
+	var err error
+	s := new(Store)
+
 	s.db, err = gorm.Open("sqlite3", "test.db")
 	if err != nil {
 		return nil, err
@@ -20,23 +23,23 @@ func NewStore() (*Storage, error) {
 
 func (s *Store) GetAllUsers() []user.User {
 	var users []user.User
-	db.Find(&value)
+	s.db.Find(&users)
 	return users
 }
 
 func (s *Store) GetUser(id int) user.User {
 	var user user.User
-	db.First(&user, id)
+	s.db.First(&user, id)
 	return user
 }
 
 func (s *Store) CreateUser(user user.User) user.User {
-	db.Create(&User)
+	s.db.Create(&user)
 	return user
 }
 
 func (s *Store) DeleteUser(id int) {
 	var user user.User
-	db.First(&user, id)
-	db.Delete(&user)
+	s.db.First(&user, id)
+	s.db.Delete(&user)
 }
