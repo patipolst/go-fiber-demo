@@ -8,36 +8,36 @@ import (
 	"github.com/patipolst/go-fiber-demo/pkg/user"
 )
 
-func getAllUsers(u user.Service) func(c *fiber.Ctx) {
+func getAllUsers(s user.Service) func(c *fiber.Ctx) {
 	return func(c *fiber.Ctx) {
-		users := u.GetAllUsers()
+		users := s.GetAllUsers()
 		c.JSON(users)
 	}
 }
 
-func getUser(u user.Service) func(c *fiber.Ctx) {
+func getUser(s user.Service) func(c *fiber.Ctx) {
 	return func(c *fiber.Ctx) {
-		id := extractId(c)
-		user := u.GetUser(id)
+		id := extractID(c)
+		user := s.GetUser(id)
 		c.JSON(user)
 	}
 }
 
-func createUser(u user.Service) func(c *fiber.Ctx) {
+func createUser(s user.Service) func(c *fiber.Ctx) {
 	return func(c *fiber.Ctx) {
 		user := new(user.User)
 		if err := c.BodyParser(user); err != nil {
 			log.Fatal(err)
 		}
-		u.CreateUser(*user)
+		s.CreateUser(*user)
 		c.JSON(user)
 	}
 }
 
-func deleteUser(u user.Service) func(c *fiber.Ctx) {
+func deleteUser(s user.Service) func(c *fiber.Ctx) {
 	return func(c *fiber.Ctx) {
-		id := extractId(c)
-		u.DeleteUser(id)
+		id := extractID(c)
+		s.DeleteUser(id)
 		c.JSON(fiber.Map{
 			"ok": true,
 		})
