@@ -2,6 +2,8 @@ package db
 
 import (
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+
 	"github.com/patipolst/go-fiber-demo/pkg/user"
 )
 
@@ -13,10 +15,12 @@ func NewStore() (*Store, error) {
 	var err error
 	s := new(Store)
 
-	s.db, err = gorm.Open("sqlite3", "test.db")
+	s.db, err = gorm.Open("sqlite3", "users.db")
 	if err != nil {
 		return nil, err
 	}
+
+	s.db.AutoMigrate(&user.User{})
 
 	return s, nil
 }
