@@ -13,17 +13,3 @@ func main() {
 	app := rest.Handler(userService)
 	app.Listen(3000)
 }
-
-// func helloHandler(c *fiber.Ctx) {
-// 	c.Send("Hello, World!")
-// }
-
-// func setupRoutes(app *fiber.App) {
-// 	app.Get("/", helloHandler)
-
-// 	userStore := user.NewDummyStore()
-// 	userService := user.NewService(userStore)
-// 	userController := user.NewController(userService)
-// 	userRoute := user.NewRoute(userController)
-// 	userRoute.SetupRoutes(app)
-// }
