@@ -1,7 +1,5 @@
 package user
 
-import "fmt"
-
 // Service provides user operations.
 type Service interface {
 	GetAllUsers() []User
@@ -29,7 +27,6 @@ func NewService(store Store) Service {
 
 func (s *service) GetAllUsers() []User {
 	// any validation can be done here
-	fmt.Println("SERVICE: GET all users")
 	return s.store.GetAllUsers()
 }
 
