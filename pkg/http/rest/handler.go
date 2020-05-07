@@ -5,7 +5,7 @@ import (
 	"github.com/patipolst/go-fiber-demo/pkg/user"
 )
 
-// Handler returns a fiber instance with defined handlers
+// Handler returns a fiber instance with defined api handlers
 func Handler(u user.Service) *fiber.App {
 	app := fiber.New()
 
