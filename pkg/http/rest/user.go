@@ -8,40 +8,40 @@ import (
 	"github.com/patipolst/go-fiber-demo/pkg/user"
 )
 
-func getAllUsers(s user.Service) func(c *fiber.Ctx) {
-	return func(c *fiber.Ctx) {
-		users := s.GetAllUsers()
-		c.JSON(users)
-	}
+type UserHandler struct {
+	service user.Service
 }
 
-func getUser(s user.Service) func(c *fiber.Ctx) {
-	return func(c *fiber.Ctx) {
-		id := extractID(c)
-		user := s.GetUser(id)
-		c.JSON(user)
-	}
+func NewUserHandler(service user.Service) UserHandler {
+	return UserHandler{service}
 }
 
-func createUser(s user.Service) func(c *fiber.Ctx) {
-	return func(c *fiber.Ctx) {
-		user := new(user.User)
-		if err := c.BodyParser(user); err != nil {
-			log.Fatal(err)
-		}
-		s.CreateUser(*user)
-		c.JSON(user)
-	}
+func (handler *UserHandler) getAllUsers(c *fiber.Ctx) {
+	users := handler.service.GetAllUsers()
+	c.JSON(users)
 }
 
-func deleteUser(s user.Service) func(c *fiber.Ctx) {
-	return func(c *fiber.Ctx) {
-		id := extractID(c)
-		s.DeleteUser(id)
-		c.JSON(fiber.Map{
-			"ok": true,
-		})
+func (handler *UserHandler) getUser(c *fiber.Ctx) {
+	id := extractID(c)
+	user := handler.service.GetUser(id)
+	c.JSON(user)
+}
+
+func (handler *UserHandler) createUser(c *fiber.Ctx) {
+	user := new(user.User)
+	if err := c.BodyParser(user); err != nil {
+		log.Fatal(err)
 	}
+	handler.service.CreateUser(*user)
+	c.JSON(user)
+}
+
+func (handler *UserHandler) deleteUser(c *fiber.Ctx) {
+	id := extractID(c)
+	handler.service.DeleteUser(id)
+	c.JSON(fiber.Map{
+		"ok": true,
+	})
 }
 
 func extractID(c *fiber.Ctx) int {

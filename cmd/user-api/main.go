@@ -10,6 +10,7 @@ func main() {
 	// userStore := stub.NewStore()
 	userStore, _ := db.NewStore()
 	userService := user.NewService(userStore)
-	app := rest.Handler(userService)
+	userHandler := rest.NewUserHandler(userService)
+	app := rest.New(userHandler)
 	app.Listen(3000)
 }

@@ -2,18 +2,17 @@ package rest
 
 import (
 	"github.com/gofiber/fiber"
-	"github.com/patipolst/go-fiber-demo/pkg/user"
 )
 
-// Handler returns a fiber instance with defined api handlers
-func Handler(u user.Service) *fiber.App {
+// New returns a fiber instance with defined api handlers
+func New(h UserHandler) *fiber.App {
 	app := fiber.New()
 
 	v1 := app.Group("/v1")
-	v1.Get("/users", getAllUsers(u))
-	v1.Get("/users/:id", getUser(u))
-	v1.Post("/users", createUser(u))
-	v1.Delete("/users/:id", deleteUser(u))
+	v1.Get("/users", h.getAllUsers)
+	v1.Get("/users/:id", h.getUser)
+	v1.Post("/users", h.createUser)
+	v1.Delete("/users/:id", h.deleteUser)
 
 	return app
 }
