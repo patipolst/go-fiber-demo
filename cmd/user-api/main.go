@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// userStore := stub.NewStore()
-	userStore, _ := db.NewStore()
+	userStore, _ := db.NewUserStore()
 	userService := user.NewService(userStore)
 	userHandler := rest.NewUserHandler(userService)
 	app := rest.New(userHandler)

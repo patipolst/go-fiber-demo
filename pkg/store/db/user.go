@@ -29,13 +29,13 @@ func (m UserModel) ToUser() user.User {
 	}
 }
 
-type Store struct {
+type UserStore struct {
 	db *gorm.DB
 }
 
-func NewStore() (*Store, error) {
+func NewUserStore() (*UserStore, error) {
 	var err error
-	s := new(Store)
+	s := new(UserStore)
 
 	s.db, err = gorm.Open("sqlite3", "users.db")
 	if err != nil {
@@ -47,7 +47,7 @@ func NewStore() (*Store, error) {
 	return s, nil
 }
 
-func (s *Store) GetAllUsers() []user.User {
+func (s *UserStore) GetAllUsers() []user.User {
 	var models []UserModel
 	var users []user.User
 	s.db.Find(&models)
@@ -57,19 +57,19 @@ func (s *Store) GetAllUsers() []user.User {
 	return users
 }
 
-func (s *Store) GetUser(id int) user.User {
+func (s *UserStore) GetUser(id int) user.User {
 	var m UserModel
 	s.db.First(&m, id)
 	return m.ToUser()
 }
 
-func (s *Store) CreateUser(user user.User) user.User {
+func (s *UserStore) CreateUser(user user.User) user.User {
 	m := NewUserModel(user)
 	s.db.Create(&m)
 	return user
 }
 
-func (s *Store) DeleteUser(id int) {
+func (s *UserStore) DeleteUser(id int) {
 	var m UserModel
 	s.db.First(&m, id)
 	s.db.Delete(&m)
