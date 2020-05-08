@@ -7,6 +7,28 @@ import (
 	"github.com/patipolst/go-fiber-demo/pkg/user"
 )
 
+type UserModel struct {
+	gorm.Model
+	user.User
+}
+
+func NewUserModel(u user.User) UserModel {
+	return UserModel{
+		User: u,
+	}
+}
+
+func (m UserModel) TableName() string {
+	return "users"
+}
+
+func (m UserModel) ToUser() user.User {
+	return user.User{
+		Name: m.User.Name,
+		Age:  m.User.Age,
+	}
+}
+
 type Store struct {
 	db *gorm.DB
 }
@@ -20,30 +42,35 @@ func NewStore() (*Store, error) {
 		return nil, err
 	}
 
-	s.db.AutoMigrate(&user.User{})
+	s.db.AutoMigrate(&UserModel{})
 
 	return s, nil
 }
 
 func (s *Store) GetAllUsers() []user.User {
+	var models []UserModel
 	var users []user.User
-	s.db.Find(&users)
+	s.db.Find(&models)
+	for _, m := range models {
+		users = append(users, m.ToUser())
+	}
 	return users
 }
 
 func (s *Store) GetUser(id int) user.User {
-	var user user.User
-	s.db.First(&user, id)
-	return user
+	var m UserModel
+	s.db.First(&m, id)
+	return m.ToUser()
 }
 
 func (s *Store) CreateUser(user user.User) user.User {
-	s.db.Create(&user)
+	m := NewUserModel(user)
+	s.db.Create(&m)
 	return user
 }
 
 func (s *Store) DeleteUser(id int) {
-	var user user.User
-	s.db.First(&user, id)
-	s.db.Delete(&user)
+	var m UserModel
+	s.db.First(&m, id)
+	s.db.Delete(&m)
 }
